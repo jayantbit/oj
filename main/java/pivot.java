@@ -3,8 +3,14 @@ import java.util.Scanner;
 
 public class pivot
 {
+  /*
+  dp[i][0]=dp[i+1][0]
+          1+dp[j][0]
 
-
+  dp[i][1]=dp[i+1][1]
+           1+dp[j][1]
+           1+dp[k][0]
+   */
   public static int fn(int arr[],int low,int high)
   {
    // System.out.println(low+": "+high);
@@ -27,6 +33,22 @@ public class pivot
     return pos;
   }
 
+  public static void pivotSimple(int arr[],int low,int high,int val)
+  {
+    if(low==high)return;
+    int pos=low-1,i,temp;
+    for(i=low;i<=high;i++)
+    {
+      if(arr[i]<=val)
+      {
+        pos++;
+        temp=arr[pos];
+        arr[pos]=arr[i];
+        arr[i]=temp;
+      }
+    }
+  }
+
   public static void qs(int arr[],int low,int high) throws Exception
   {
     if(high-low>=1)
@@ -46,7 +68,7 @@ public class pivot
      for(i=0;i<n;i++)
        arr[i]=in.nextInt();
 
-    qs(arr,0,n-1);
+    pivotSimple(arr,0,n-1,0);
       for(i=0;i<n;i++)
         System.out.print(arr[i]+" ");
       System.out.println();
