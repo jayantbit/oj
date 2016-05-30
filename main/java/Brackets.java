@@ -8,6 +8,7 @@ import java.util.Stack;
 /*
 0 2 3 5 6 7
 8 1 2 1 1 3 7 0
+https://www.hackerrank.com/challenges/java-stack
 */
 public class Brackets {
 
@@ -22,6 +23,7 @@ public class Brackets {
     Scanner in = new Scanner(System.in);
     int t,tc,i,j,k,l;
     Stack<Character> st = new Stack<Character>();
+
     while(in.hasNext())
     {
       String s=in.nextLine();

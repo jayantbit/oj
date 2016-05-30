@@ -1,4 +1,3 @@
-import java.util.HashMap;
 import java.util.Scanner;
 
 /**
@@ -8,46 +7,29 @@ import java.util.Scanner;
 class CHEFMATH {
 
   static int lim=42;
-  static int fib[]=new int[lim+1];
+  static long fib[]=new long[lim+1];
   static int MOD=1000000007;
+  static long ans;
 
-  static class Rem
+  static void ways(long x,int pos,int k)
   {
-    int x,k,up;
-    Rem(int a,int b,int c)
-    {
-      x=a;
-      k=b;
-      up=c;
+    if(k==0){
+      if(x==0)
+      {
+        ans=(ans+1)%MOD;
+      }
+      return;
     }
-  }
+    if(pos<0)return;
 
-  static HashMap<Rem,Long> mp =new HashMap();
+    if(k*fib[pos]<x)return;
 
-  static long ways(int x,int k,int up)
-  {
-    if(k==0)return (x==0)?1:0;
-    long ans=0;
-    int i;
-    if(k==1)
-    {
-      for(i=0;i<=up;i++)
-        if(fib[i]==x)return 1;
-      return 0;
-    }
+    ways(x,pos-1,k);
 
-    Rem rem=new Rem(x,k,up);
-    if(mp.containsKey(rem))
-      return mp.get(rem);
+    if(fib[pos]<=x)
+      ways(x-fib[pos],pos,k-1);
 
-    for(i=0;i<=up;i++)
-    {
-      if(fib[i]<=x)
-        ans=(ans+ways(x-fib[i],k-1,i))%MOD;
-      else break;
-    }
-    mp.put(rem,ans);
-    return ans;
+
   }
   //1 2 3 5 8 13 21
   /*
@@ -60,18 +42,21 @@ class CHEFMATH {
   public static void main(String[] args) {
     Scanner in = new Scanner(System.in);
 
-    int i,tc;
-    fib[0]=1;
-    fib[1]=2;
-    for(i=2;i<=lim;i++)
-    {
-      fib[i]=fib[i-1]+fib[i-2];
-      System.out.println(fib[i]);
+    int i, tc;
+    fib[0] = 1;
+    fib[1] = 2;
+
+    for (i = 2; i <= lim; i++)
+      fib[i] = fib[i - 1] + fib[i - 2];
+
+
+    tc = in.nextInt();
+    while (tc-- > 0) {
+      ans=0;
+      long target=in.nextInt();
+      int k= in.nextInt();
+      ways(target, 42, k);
+      System.out.println(ans);
     }
-
-    tc=in.nextInt();
-    while(tc-->0)
-      System.out.println(ways(in.nextInt(),in.nextInt(),lim));
-
   }
 }
