@@ -1,8 +1,10 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class Cf1004C {
 
@@ -39,6 +41,25 @@ public class Cf1004C {
 
        if(pos1!=pos2) ans+= (long)distNum[pos2];
        else if(pos1>0)ans+=(long)distNum[pos1-1];
+
+      LinkedList<Double> result = new LinkedList<>();
+
+
+    }
+
+    List<Integer> list= new ArrayList<>();
+    list.get(0);
+
+
+    Stack<Character>  stack = new Stack();
+
+
+
+
+    boolean flag=false;
+    if(flag)
+    {
+
     }
 
     System.out.println(ans);
