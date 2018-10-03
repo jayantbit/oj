@@ -2,60 +2,134 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import java.util.List;
+
 import java.util.Map;
-import java.util.Scanner;
+import java.util.PriorityQueue;
+import java.util.Queue;
+
 
 public class Code {
 
 
-  static int solve(int n)
-  {
-    long dp[][]= new long[n+1][5];
+  //0   5   10
+  //0 1
 
-    long mod=1000000007;
+  Map<Integer, Segment> startIndexMap = new HashMap<>();
+  Map<Integer, Segment> endIndexMap = new HashMap<>();
+
+  static class Segment {
+    public int start;
+    public int end;
+    boolean startOccupied;
+    boolean endOccupied;
 
 
-    int i,j,k;
-
-    for(i=0;i<5;i++)
-      dp[0][i]=1;
-
-
-    for(i=1;i<=n;i++)
-    {
-      for(j=0;j<5;j++)
-        for(k=0;k<=j;k++)
-        {
-          dp[i][j]=  (dp[i][j]+dp[i-1][k])%mod;
-        }
+    public Segment(int start, int end) {
+      this.start = start;
+      this.end = end;
+      startOccupied = endOccupied = false;
     }
 
-    Map<String,Integer> map = new HashMap<>();
-    List<String> list = new ArrayList<String>();
+    public int getMid() {
+      return (start + end) / 2;
+    }
+  }
 
-   for(Map.Entry entry : map.entrySet())
-   {
-
-   }
+  Queue<Segment> queue;
 
 
-    long ans=0;
+  int n;
 
-    for(j=0;j<5;j++)
-      ans= (ans+dp[n-1][j])%mod;
+  public Code(int N) {
+    queue = new PriorityQueue<Segment>((Segment a, Segment b) ->
+    {
+      int len1 = a.end - a.start;
+      int len2 = b.end - b.start;
+      if (len1 != len2) {
+        return len2 - len1;
+      } else return (a.getMid() - b.getMid());
 
-    return (int)ans;
+    });
+
+    this.n = N;
+  }
+
+  private void add(Segment segment) {
+    startIndexMap.put(segment.start, segment);
+    endIndexMap.put(segment.end, segment);
+
+    queue.offer(segment);
+  }
+
+  private void remove(Segment segment) {
+    startIndexMap.remove(segment.start);
+    endIndexMap.remove(segment.end);
+
+    queue.remove(segment);
+  }
+
+  public int seat() {
+
+
+    if (queue.isEmpty()) {
+
+      Segment segment = new Segment(0, n - 1);
+      segment.startOccupied = true;
+      add(segment);
+      return 0;
+    } else {
+      Segment segment = queue.poll();
+
+      if (segment.endOccupied == false) {
+        segment.endOccupied = true;
+        queue.offer(segment);
+        return segment.end;
+      } else if (segment.startOccupied == false) {
+        segment.startOccupied = true;
+        queue.offer(segment);
+        return segment.start;
+      } else {
+        //placing in mid
+        remove(segment);
+
+        if (segment.end != segment.start) {
+
+          Segment newSeg1 = new Segment(segment.start, segment.getMid());
+
+          Segment newSeg2 = new Segment(segment.getMid() + 1, segment.end);
+
+          add(newSeg1);
+          add(newSeg2);
+        }
+        return segment.getMid();
+      }
+
+
+    }
   }
 
 
-  public static void main(String[] args) {
+    public void leave( int p){
 
-    Scanner in = new Scanner(System.in);
+      if (endIndexMap.containsKey(p)) {
+        Segment segment = endIndexMap.get(p);
 
-    int x=24;
-    double res=24;
-    System.out.println(String.format("%.3f",res));
+        Segment nextSegment = startIndexMap.get(p + 1);
 
+        Segment newSegment = new Segment(segment.start, nextSegment.end);
+
+        remove(segment);
+        add(newSegment);
+      } else if (startIndexMap.containsKey(p)) {
+        Segment segment = startIndexMap.get(p);
+
+        Segment prevSegment = endIndexMap.get(p - 1);
+
+        Segment newSegment = new Segment(prevSegment.start, segment.end);
+
+        remove(segment);
+        add(newSegment);
+      }
+    }
   }
-}
+
